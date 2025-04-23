@@ -2,23 +2,23 @@ id: ibex_215550
 namespace: demo
 
 tasks:
-  # - id: airbyte-sync
-  #   type: io.kestra.plugin.airbyte.connections.Sync
-  #   # http://localhost:8000/workspaces/5d91202e-7086-47a5-9038-4a041f372060/connections/549bc79f-4786-4206-9e7a-84ba16b64545/
-  #   connectionId: 549bc79f-4786-4206-9e7a-84ba16b64545
-  #   url: http://host.docker.internal:8000
-  #   username: airbyte
-  #   password: password
-  #   timeout: PT10M
-  #   # retry:
-  #   #   maxAttempt: 3
-  #   #   delay: PT30S
+  - id: airbyte-sync
+    type: io.kestra.plugin.airbyte.connections.Sync
+    # http://localhost:8000/workspaces/5d91202e-7086-47a5-9038-4a041f372060/connections/549bc79f-4786-4206-9e7a-84ba16b64545/
+    connectionId: 549bc79f-4786-4206-9e7a-84ba16b64545
+    url: http://host.docker.internal:8000
+    username: airbyte
+    password: password
+    timeout: PT10M
+    # retry:
+    #   maxAttempt: 3
+    #   delay: PT30S
 
-  # - id: log-after-sync
-  #   type: io.kestra.plugin.core.log.Log
-  #   message: Airbyte sync completed!
-  #   # dependsOn:
-  #   #   - airbyte-sync
+  - id: log-after-sync
+    type: io.kestra.plugin.core.log.Log
+    message: Airbyte sync completed!
+    # dependsOn:
+    #   - airbyte-sync
 
 
   # - id: shell
@@ -103,4 +103,14 @@ tasks:
   - id: log-after-dbt
     type: io.kestra.plugin.core.log.Log
     message: DBT transformation completed!
+
+
+
+  - id: psql
+    type: io.kestra.plugin.jdbc.postgresql.Query
+    url: jdbc:postgresql://host.docker.internal:5435/tsdb
+    username: tsuser
+    password: tspassword
+    sql: DO $$ BEGIN IF NOT EXISTS ( SELECT 1 FROM information_schema.views WHERE table_schema = 'analytic' AND table_name = 'report_crime' ) THEN EXECUTE 'CREATE VIEW analytic.report_crime AS SELECT * FROM analytic.report_crime_batch UNION ALL SELECT * FROM analytic.report_crime_realtime'; END IF; END $$;
+
 
