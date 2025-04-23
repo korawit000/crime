@@ -1,4 +1,4 @@
-{{ config(materialized='incremental', unique_key='dr_no') }}
+{{ config(materialized='table', unique_key='dr_no') }}
 
 with source AS (
   SELECT 
@@ -72,6 +72,6 @@ select
 *
 from source
 
-{% if is_incremental() %}
-    where dr_no > (select max(dr_no) from {{ this }})
-{% endif %}
+-- {% if is_incremental() %}
+--     where dr_no > (select max(dr_no) from {{ this }})
+-- {% endif %}
