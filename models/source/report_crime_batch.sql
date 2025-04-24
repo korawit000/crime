@@ -25,7 +25,7 @@ with source AS (
     ,nullif(trim(cast(mocodes AS VARCHAR)), '') AS mocodes
     ,case when nullif(trim(cast("Vict Age" AS VARCHAR)), '') is not null then  cast("Vict Age" as int)
     	else cast(null as int) end AS vict_age
-    ,case when cast("Vict Age" AS INT) >= 0 and cast("Vict Age" AS INT)  < 11 then  '0-10'
+    ,case when cast("Vict Age" AS INT) > 0 and cast("Vict Age" AS INT)  < 11 then  '1-10'
 			when cast("Vict Age" AS INT) >= 11 and cast("Vict Age" AS INT)  < 21 then  '11-20'
 			when cast("Vict Age" AS INT) >= 21 and cast("Vict Age" AS INT)  < 31 then  '21-30'
 			when cast("Vict Age" AS INT) >= 31 and cast("Vict Age" AS INT)  < 41 then  '31-40'
@@ -34,7 +34,8 @@ with source AS (
 			when cast("Vict Age" AS INT) >= 61 and cast("Vict Age" AS INT)  < 71 then  '61-70'
 			when cast("Vict Age" AS INT) >= 71 and cast("Vict Age" AS INT)  < 81 then  '71-80'
 			when cast("Vict Age" AS INT) > 80 then  '80+'
-    	else CAST(NULL AS VARCHAR) end as vict_age_range
+      when cast("Vict Age" AS INT) > 0 then  'N/A'
+    	else 'N/A' end as vict_age_range
 --    ,nullif(trim(cast("Vict Sex" AS BPCHAR)), '') AS vict_sex
 	,case when cast("Vict Sex" AS BPCHAR) = 'M' then 'Male'
 	        when cast("Vict Sex" AS BPCHAR) = 'F' then 'Female'
