@@ -34,7 +34,7 @@ with source AS (
 			when cast("Vict Age" AS INT) >= 61 and cast("Vict Age" AS INT)  < 71 then  '61-70'
 			when cast("Vict Age" AS INT) >= 71 and cast("Vict Age" AS INT)  < 81 then  '71-80'
 			when cast("Vict Age" AS INT) > 80 then  '80+'
-      when cast("Vict Age" AS INT) > 0 then  'N/A'
+      when cast("Vict Age" AS INT) = 0 then  'N/A'
     	else 'N/A' end as vict_age_range
 --    ,nullif(trim(cast("Vict Sex" AS BPCHAR)), '') AS vict_sex
 	,case when cast("Vict Sex" AS BPCHAR) = 'M' then 'Male'
