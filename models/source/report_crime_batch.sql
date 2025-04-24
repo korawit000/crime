@@ -1,7 +1,7 @@
 {{ config(materialized='table', unique_key='dr_no') }}
 
 with source AS (
-  SELECT 
+ SELECT 
     nullif(trim(cast(dr_no AS VARCHAR)), '') AS dr_no
     ,CAST("Date Rptd" as date) AS date_rptd
     ,CAST("DATE OCC" as date) AS date_occ
@@ -23,11 +23,7 @@ with source AS (
     	else cast(null as int) end AS crm_cd
     ,nullif(trim(cast("Crm Cd Desc" AS VARCHAR)), '') AS crm_cd_desc
     ,nullif(trim(cast(mocodes AS VARCHAR)), '') AS mocodes
-    ,case when nullif(trim(cast("Vict Age" AS VARCHAR)), '') is not null 
-    	then when cast("Vict Age" AS INT) = 'M' then 'Male'
-        when cast("Vict Age" AS INT) = 'F' then 'Female'
-        when cast("Vict Age" AS INT) = 'X' then 'Not specified'
-        else cast(null as int) end
+    ,case when nullif(trim(cast("Vict Age" AS VARCHAR)), '') is not null then  cast("Vict Age" as int)
     	else cast(null as int) end AS vict_age
     ,case when cast("Vict Age" AS INT) >= 0 and cast("Vict Age" AS INT)  < 11 then  '0-10'
 			when cast("Vict Age" AS INT) >= 11 and cast("Vict Age" AS INT)  < 21 then  '11-20'
@@ -39,7 +35,11 @@ with source AS (
 			when cast("Vict Age" AS INT) >= 71 and cast("Vict Age" AS INT)  < 81 then  '71-80'
 			when cast("Vict Age" AS INT) > 80 then  '80+'
     	else CAST(NULL AS VARCHAR) end as vict_age_range
-    ,nullif(trim(cast("Vict Sex" AS BPCHAR)), '') AS vict_sex
+--    ,nullif(trim(cast("Vict Sex" AS BPCHAR)), '') AS vict_sex
+	,case when cast("Vict Sex" AS BPCHAR) = 'M' then 'Male'
+	        when cast("Vict Sex" AS BPCHAR) = 'F' then 'Female'
+	        when cast("Vict Sex" AS BPCHAR) = 'X' then 'Not specified'
+    		else cast(NULL AS BPCHAR) end AS vict_sex
     ,nullif(trim(cast("Vict Descent" AS BPCHAR)), '') AS vict_descent
     ,case when nullif(trim(cast("Premis Cd" AS VARCHAR)), '') is not null 
     	then cast("Premis Cd" AS INT) 
