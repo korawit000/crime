@@ -24,7 +24,10 @@ with source AS (
     ,nullif(trim(cast("Crm Cd Desc" AS VARCHAR)), '') AS crm_cd_desc
     ,nullif(trim(cast(mocodes AS VARCHAR)), '') AS mocodes
     ,case when nullif(trim(cast("Vict Age" AS VARCHAR)), '') is not null 
-    	then cast("Vict Age" AS INT) 
+    	then when cast("Vict Age" AS INT) = 'M' then 'Male'
+        when cast("Vict Age" AS INT) = 'F' then 'Female'
+        when cast("Vict Age" AS INT) = 'X' then 'Not specified'
+        else cast(null as int) end
     	else cast(null as int) end AS vict_age
     ,case when cast("Vict Age" AS INT) >= 0 and cast("Vict Age" AS INT)  < 11 then  '0-10'
 			when cast("Vict Age" AS INT) >= 11 and cast("Vict Age" AS INT)  < 21 then  '11-20'
